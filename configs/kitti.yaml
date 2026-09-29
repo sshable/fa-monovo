@@ -1,0 +1,57 @@
+dataset:
+  root: data/kitti
+  sequence: "00"
+  image_directory: image_2
+  calibration_key: P2
+  poses_directory: poses
+
+run:
+  max_frames: 100
+  output_directory: outputs/sequence_00
+
+features:
+  detector: shi_tomasi
+  max_features: 2000
+  minimum_features: 500
+  quality_level: 0.01
+  minimum_distance: 7.0
+  block_size: 7
+
+tracking:
+  window_size: 21
+  pyramid_levels: 3
+  criteria_max_iterations: 30
+  criteria_epsilon: 0.01
+  forward_backward_threshold: 1.0
+
+geometry:
+  ransac_threshold_pixels: 1.0
+  ransac_probability: 0.999
+  ransac_max_iterations: 1000
+  minimum_correspondences: 8
+  minimum_inliers: 8
+  random_seed: 0
+
+confidence:
+  tracked_features_reference: 500
+  inliers_reference: 100
+  inlier_ratio_reference: 0.60
+  spatial_coverage_reference: 0.50
+  minimum_tracked_features: 8
+  minimum_inliers: 8
+  minimum_inlier_ratio: 0.15
+  minimum_median_flow_pixels: 0.30
+  minimum_spatial_coverage: 0.10
+  good_score_threshold: 0.65
+  maximum_rotation_degrees: 20.0
+  maximum_direction_change_degrees: 90.0
+  temporal_penalty: 0.50
+  coverage_grid_rows: 4
+  coverage_grid_columns: 4
+
+evaluation:
+  scale_mode: sim3_aligned
+
+visualization:
+  enabled: true
+  save_video: false
