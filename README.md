@@ -42,20 +42,7 @@ or hosted video can be added here when publishing a project release.
 
 ## Pipeline
 
-```mermaid
-flowchart LR
-    A["KITTI grayscale frames"] --> B["Shi–Tomasi corners"]
-    B --> C["Pyramidal LK tracking"]
-    C --> D["Status, bounds, and forward–backward checks"]
-    D --> E["Essential matrix with RANSAC"]
-    E --> F["recoverPose and cheirality inliers"]
-    F --> G["Rule-based confidence"]
-    G -->|"good / degraded"| H["Accumulate T_world_camera"]
-    G -->|"failed"| I["Hold pose and re-detect"]
-    H --> J["Trajectory and diagnostics"]
-    I --> J
-    J --> K["Post-hoc Sim(3) evaluation"]
-```
+![Failure-aware monocular visual-odometry pipeline](docs/assets/pipeline-architecture.png)
 
 For every new image, the estimator:
 

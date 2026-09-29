@@ -1,0 +1,156 @@
+digraph MonocularVO {
+    graph [
+        rankdir=TB,
+        bgcolor="#F7F9FC",
+        pad="0.30",
+        nodesep="0.28",
+        ranksep="0.38",
+        splines=ortho,
+        outputorder=edgesfirst
+    ];
+
+    node [
+        shape=rect,
+        style="rounded,filled",
+        fontname="DejaVu Sans",
+        fontsize=15,
+        fontcolor="#172033",
+        color="#CBD5E1",
+        fillcolor="#FFFFFF",
+        penwidth=1.6,
+        width=5.2,
+        height=0.72,
+        margin="0.18,0.12"
+    ];
+
+    edge [
+        color="#7B8798",
+        penwidth=1.8,
+        arrowsize=0.72,
+        fontname="DejaVu Sans",
+        fontsize=11,
+        fontcolor="#5C667A"
+    ];
+
+    title [
+        shape=plain,
+        fontname="DejaVu Sans Bold",
+        fontsize=24,
+        fontcolor="#172033",
+        label="FAILURE-AWARE MONOCULAR VO"
+    ];
+
+    subtitle [
+        shape=plain,
+        fontname="DejaVu Sans",
+        fontsize=12,
+        fontcolor="#64748B",
+        label="Online scale-free estimation • post-hoc metric evaluation"
+    ];
+
+    input [
+        label="01  INPUT\nKITTI grayscale frame  +  calibrated camera matrix K",
+        fillcolor="#EAF2FF",
+        color="#5B8DEF"
+    ];
+
+    detect [
+        label="02  DETECT\nShi–Tomasi corners with spatial separation",
+        fillcolor="#E9FBF8",
+        color="#22A699"
+    ];
+
+    track [
+        label="03  TRACK\nPyramidal Lucas–Kanade optical flow",
+        fillcolor="#E9FBF8",
+        color="#22A699"
+    ];
+
+    validate [
+        label="04  FILTER TRACKS\nStatus • image bounds • finite values • forward–backward error",
+        fillcolor="#E9FBF8",
+        color="#22A699"
+    ];
+
+    essential [
+        label="05  ROBUST GEOMETRY\nEssential matrix E from calibrated correspondences + RANSAC",
+        fillcolor="#EEF0FF",
+        color="#7479E8"
+    ];
+
+    recover [
+        label="06  RELATIVE MOTION\nrecoverPose → rotation R + unit translation direction t",
+        fillcolor="#EEF0FF",
+        color="#7479E8"
+    ];
+
+    confidence [
+        shape=diamond,
+        label="07  CONFIDENCE\nGeometric support + coverage\n+ temporal consistency",
+        width=5.4,
+        height=1.25,
+        fillcolor="#FFF7DC",
+        color="#E0A526"
+    ];
+
+    accept [
+        label="GOOD / DEGRADED\nAccumulate T_world_camera",
+        width=2.65,
+        fillcolor="#EAF8EF",
+        color="#37A365"
+    ];
+
+    fail [
+        label="FAILED\nHold pose + re-detect features",
+        width=2.65,
+        fillcolor="#FDECEC",
+        color="#D9534F"
+    ];
+
+    diagnostics [
+        label="08  SCALE-FREE RESULT\nTrajectory + per-frame diagnostics + optional MP4",
+        fillcolor="#F3EDFF",
+        color="#8B5CF6"
+    ];
+
+    alignment [
+        label="09  POST-HOC EVALUATION\nOne Umeyama Sim(3) alignment → ATE + motion errors",
+        fillcolor="#F3EDFF",
+        color="#8B5CF6"
+    ];
+
+    ground_truth [
+        label="KITTI ground truth\nevaluation only",
+        width=2.35,
+        fillcolor="#F1F5F9",
+        color="#94A3B8",
+        fontcolor="#475569"
+    ];
+
+    outputs [
+        label="10  SAVED ARTIFACTS\ntrajectory_estimated.txt  •  metrics.json\nframe_diagnostics.csv  •  trajectory.png  •  demo.mp4",
+        fillcolor="#172033",
+        color="#172033",
+        fontcolor="#FFFFFF"
+    ];
+
+    title -> subtitle [style=invis, weight=20];
+    subtitle -> input [style=invis, weight=20];
+    input -> detect;
+    detect -> track;
+    track -> validate;
+    validate -> essential;
+    essential -> recover;
+    recover -> confidence;
+
+    confidence -> accept [label="accepted"];
+    confidence -> fail [label="rejected"];
+    {rank=same; accept; fail;}
+
+    accept -> diagnostics;
+    fail -> diagnostics;
+    diagnostics -> alignment;
+    ground_truth -> alignment [style=dashed, label="after inference", constraint=false];
+    {rank=same; alignment; ground_truth;}
+    alignment -> outputs;
+}
