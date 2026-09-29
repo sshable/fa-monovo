@@ -147,8 +147,8 @@ included in the development extra. A GPU is not required.
 Clone the repository after creating the GitHub remote:
 
 ```bash
-git clone https://github.com/<your-github-username>/failure-aware-monocular-vo.git
-cd failure-aware-monocular-vo
+git clone https://github.com/<your-github-username>/fa-monovo.git
+cd fa-monovo
 ```
 
 Create a clean environment and install the package in editable mode:
@@ -388,7 +388,7 @@ reason is written to diagnostics. Confidence is a heuristic score, not a calibra
 ## Repository structure
 
 ```text
-failure-aware-monocular-vo/
+fa-monovo/
 ├── configs/
 │   └── kitti.yaml
 ├── docs/
